@@ -1,0 +1,21 @@
+---
+- hosts: all
+  become: true
+  # become_flags: -E # Only used this if the sudo user is not able to download packages
+  
+  vars: # Check https://github.com/geerlingguy/ansible-role-docker/blob/master/defaults/main.yml  for all the vars
+    # Edition can be one of: 'ce' (Community Edition) or 'ee' (Enterprise Edition).
+    docker_edition: 'ce'
+    docker_packages_state: present
+    docker_service_manage: true
+    docker_service_state: started
+    docker_service_enabled: true
+    docker_restart_handler_state: restarted
+
+  roles:
+    - role: geerlingguy.docker
+
+  tasks:
+    - name: Run expect to wait for a successful PXE boot via out-of-band CIMC
+      ansible.builtin.shell: |
+        sudo setfacl -R -m u:{{ ansible_user }}:w /var/run/docker.sock
