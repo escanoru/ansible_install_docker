@@ -16,6 +16,6 @@
     - role: geerlingguy.docker
 
   tasks:
-    - name: Run expect to wait for a successful PXE boot via out-of-band CIMC
+    - name: Set correct permission on /var/run/docker.sock
       ansible.builtin.shell: |
         sudo setfacl -R -m u:{{ ansible_user }}:w /var/run/docker.sock
