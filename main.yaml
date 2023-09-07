@@ -18,4 +18,4 @@
   tasks:
     - name: Set correct permission on /var/run/docker.sock
       ansible.builtin.shell: |
-        sudo setfacl -R -m u:{{ ansible_user }}:w /var/run/docker.sock
+        sudo setfacl -Rdm u:{{ ansible_user }}:w /var/run/docker.sock
