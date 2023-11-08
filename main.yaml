@@ -2,7 +2,7 @@
 - hosts: all
   become: true
   # become_flags: -E # Only used this if the sudo user is not able to download packages
-  
+
   vars: # Check https://github.com/geerlingguy/ansible-role-docker/blob/master/defaults/main.yml  for all the vars
     # Edition can be one of: 'ce' (Community Edition) or 'ee' (Enterprise Edition).
     docker_edition: 'ce'
@@ -17,6 +17,9 @@
 
   tasks:
     - name: Set correct permission on /var/run/docker.sock
-      ansible.builtin.shell: |
+      ansible.legacy.shell: |
         sudo usermod -aG docker {{ ansible_user }}
-        sudo setfacl -Rdm u:{{ ansible_user }}:w /var/run/docker.sock
+        sudo setfacl -R -m u:{{ ansible_user }}:w /var/run/docker.sock
+        sudo systemctl restart docker.service
+      register: my_output
+      changed_when: my_output.rc != 0
